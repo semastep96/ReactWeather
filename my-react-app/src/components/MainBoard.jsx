@@ -4,6 +4,16 @@ import FavoriteLocations from './favoriteLocations/FavoriteLocations';
 import api from '../js/api';
 import { currentCityApi } from '../js/currentCity';
 import { favorites } from '../js/favorites';
+import store from '../store/store';
+import { addFavoriteCity, deleteFavoriteCity, updateCurrentCity } from '../store/actions';
+
+console.log(store.getState());
+store.dispatch(updateCurrentCity('New York'))
+console.log(store.getState());
+store.dispatch(addFavoriteCity('Karaganda'))
+console.log(store.getState());
+store.dispatch(deleteFavoriteCity('Karaganda'))
+console.log(store.getState());
 
 export const FavoritesContext = React.createContext()
 
