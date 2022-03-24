@@ -1,13 +1,17 @@
 import React from 'react'
-import { favorites } from '../../js/favorites';
+import { useDispatch, useSelector } from 'react-redux';
 import weatherImages from '../../js/weatherImages';
-import { FavoritesContext } from '../MainBoard';
+import { addFavoriteCity, deleteFavoriteCity } from '../../store/actions';
 
 function TabNow({cityInfo}) {
   const like ={
     activeClass: "now__like active",
     inactiveClass: "now__like"
   }
+
+  const store = useSelector(store => store)
+  const dispatch = useDispatch()
+
   return(
     <div className="tabs__content now active">
       <div className="now__celsius"><span>{cityInfo.main ? Math.round(cityInfo.main.temp) : 0}</span>°</div>
@@ -15,19 +19,14 @@ function TabNow({cityInfo}) {
       className="now__img"/>
       <div className="now__bottom">
         <div className="now__location">{cityInfo.name ? cityInfo.name : 'Unknown city'}</div>
-        <FavoritesContext.Consumer>
-          {context => {
-            return <button className={favorites.cities.has(cityInfo.name) ? like.activeClass : like.inactiveClass}
-            onClick={() => {
-              if (favorites.cities.has(cityInfo.name)) {
-                favorites.delete(cityInfo.name)
-              } else {
-                favorites.add(cityInfo.name)
-              }
-              context.setFavoritesCities([...favorites.cities])
-            }}></button>
-          }}
-        </FavoritesContext.Consumer>
+        {<button className={store.favoriteCities.includes(cityInfo.name) ? like.activeClass : like.inactiveClass}
+          onClick={() => {
+            if (store.favoriteCities.includes(cityInfo.name)) {
+              dispatch(deleteFavoriteCity(cityInfo.name))
+            } else {
+              dispatch(addFavoriteCity(cityInfo.name))
+            }
+          }} />}
       </div>
     </div>
   );

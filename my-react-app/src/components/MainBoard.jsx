@@ -3,22 +3,12 @@ import Tabs from './tabs/Tabs';
 import FavoriteLocations from './favoriteLocations/FavoriteLocations';
 import api from '../js/api';
 import { currentCityApi } from '../js/currentCity';
-import { favorites } from '../js/favorites';
-import store from '../store/store';
-import { addFavoriteCity, deleteFavoriteCity, updateCurrentCity } from '../store/actions';
+import { useSelector } from 'react-redux';
 
-console.log(store.getState());
-store.dispatch(updateCurrentCity('New York'))
-console.log(store.getState());
-store.dispatch(addFavoriteCity('Karaganda'))
-console.log(store.getState());
-store.dispatch(deleteFavoriteCity('Karaganda'))
-console.log(store.getState());
 
-export const FavoritesContext = React.createContext()
 
 function MainBoard({ currentCity }) {
-  const [favoriteCities, setFavoritesCities] = useState([...favorites.cities])
+  const state = useSelector(state => state)
 
   const [cityInfo, setInfo] = useState({})
 
@@ -44,10 +34,8 @@ function MainBoard({ currentCity }) {
 
   return (
     <div className='main'>
-      <FavoritesContext.Provider value={{favoriteCities, setFavoritesCities}}>
         <Tabs cityInfo={cityInfo} forecast={forecast} />
         <FavoriteLocations />
-      </FavoritesContext.Provider>
     </div>
   );
  

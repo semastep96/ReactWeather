@@ -1,20 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SearchForm from './SearchForm';
 import MainBoard from './MainBoard';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCurrentCity } from '../store/actions';
 import { currentCityApi } from '../js/currentCity';
 
-export const CurrentCityContext = React.createContext()
-
 function Weather() {
-  const currentCityFromCookies = currentCityApi.get()
-  const [currentCity, setCurrentCity] = useState(currentCityFromCookies)
+  const state = useSelector(state => state)
+  const currentCity = state.currentCity
+  const dispatch = useDispatch()
+
+  function setCurrentCity(cityName) {
+    dispatch(updateCurrentCity(cityName))
+  }
+
+  useEffect(() => {
+    currentCityApi.save(currentCity)
+  }, [currentCity])
 
   return(
     <div className="weather">
       <SearchForm setCurrentCity={setCurrentCity} />
-      <CurrentCityContext.Provider value={{currentCity: currentCity, setCity: setCurrentCity}}>
         <MainBoard currentCity={currentCity} />
-      </CurrentCityContext.Provider>
       <footer>
         made by semastep96<br/>tg: @semastep
       </footer>

@@ -1,17 +1,17 @@
 import React from "react";
-import { favorites } from "../../js/favorites";
-import { CurrentCityContext } from "../Weather";
+import { useDispatch } from "react-redux";
+import { deleteFavoriteCity, updateCurrentCity } from "../../store/actions";
 
-function Location({ name, setFavorites } ) {
+function Location({ name } ) {
+  const dispatch = useDispatch()
   return (
-    <CurrentCityContext.Consumer>
-    {context => <div className="location" onClick={() => {
-      context.setCity(name)
-    }}>{name} <button className="location__delete" onClick={() => {
-      favorites.delete(name)
-      setFavorites([...favorites.cities])
-    }}></button></div>}
-    </CurrentCityContext.Consumer>
+    <div className="location" onClick={() => {
+      dispatch(updateCurrentCity(name))
+    }}>{name}
+    <button className="location__delete" onClick={e => {
+      e.stopPropagation()
+      dispatch(deleteFavoriteCity(name))
+    }} /></div>
   );
 }
 
