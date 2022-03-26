@@ -1,9 +1,13 @@
 import { ACTION_NAMES } from "./actions.js"
 import { combineReducers } from "redux"
+import { currentCityApi } from "../js/currentCity.js"
+import { storage } from "../js/storage.js"
 
 const initialState = {
-  currentCity: 'Aktobe',
-  favoriteCities: []
+  currentCity: currentCityApi.get(),
+  favoriteCities: [...storage.getFavoriteCities()],
+  cityInfo: {},
+  forecast: {}
 }
 
 function currentCity(state = initialState.currentCity, action) {
@@ -27,9 +31,31 @@ function favoriteCities(state = initialState.favoriteCities, action) {
   }
 }
 
-const weatherAppCities = combineReducers({
+function cityInfo(state = initialState.cityInfo, action) {
+  switch(action.type) {
+    case ACTION_NAMES.GET_CITY_INFO:
+      if (!action.info) return state
+      return action.info
+    default:
+      return state
+  }
+}
+
+function forecast(state = initialState.forecast, action) {
+  switch(action.type) {
+    case ACTION_NAMES.GET_FORECAST:
+      if (!action.info) return state
+      return action.info
+    default:
+      return state
+  }
+}
+
+const weatherAppReducer = combineReducers({
   currentCity,
-  favoriteCities
+  favoriteCities,
+  cityInfo,
+  forecast
 })
 
-export default weatherAppCities
+export default weatherAppReducer

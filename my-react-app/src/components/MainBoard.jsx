@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Tabs from './tabs/Tabs';
 import FavoriteLocations from './favoriteLocations/FavoriteLocations';
-import api from '../js/api';
-import { currentCityApi } from '../js/currentCity';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchCityInfo, fetchForecast } from '../store/asyncActions';
 
 
 
 function MainBoard({ currentCity }) {
+  const dispatch = useDispatch()
   const state = useSelector(state => state)
-
-  const [cityInfo, setInfo] = useState({})
-
-  const [forecast, setForecast] = useState({})
+  const cityInfo = state.cityInfo
+  const forecast = state.forecast
 
   useEffect(async () => {
-    const info = await api.getCityInfo(currentCity)
-    if (info) {
-      setInfo(info)
-      currentCityApi.save(currentCity)
-      return
-    }
-    alert('error bad request from server')
+    dispatch(fetchCityInfo(currentCity))
   }, [currentCity])
 
   useEffect(async () => {
-    const forecast = await api.getForecast(currentCity)
-    if (forecast) {
-      setForecast(forecast)
-      return
-    }
+    dispatch(fetchForecast(currentCity))
   }, [currentCity])
 
   return (

@@ -1,13 +1,7 @@
-import { createStore } from "redux"
-import weatherAppCities from "./reducer.js"
-import { currentCityApi } from "../js/currentCity.js"
-import { storage } from "../js/storage.js"
+import { applyMiddleware, createStore } from "redux"
+import weatherAppReducer from "./reducer.js"
+import thunk from 'redux-thunk'
 
-const initialState = {
-  currentCity: currentCityApi.get(),
-  favoriteCities: [...storage.getFavoriteCities()]
-}
-
-const store = createStore(weatherAppCities, initialState)
+const store = createStore(weatherAppReducer, applyMiddleware(thunk))
 
 export default store
